@@ -685,7 +685,7 @@
                         <label for="fileInput" class="file-upload-label">
                             <div class="upload-icon">📁</div>
                             <p>이미지를 업로드!</p>
-                            <p style="font-size: 14px; color: rgba(255,255,255,0.8);">클릭하거나 드래그 앤 드롭</p>
+                            <p style="font-size: 14px; color: rgba(255,255,255,0.8);">클릭하거나 드래그 앤 드롭<br>(1MB 이하 권장)</p>
                         </label>
                         <input id="fileInput" type="file" accept="image/*" multiple style="display: none" />
                     </div>
@@ -750,7 +750,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1AtCeDkgLoE8PFzBjjdfFKHq0vWB1cNI",
@@ -763,7 +762,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         const defaultImages = [
             { url: "https://picsum.photos/id/1015/800/600", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
@@ -830,7 +828,7 @@
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     firebaseImages.push({
-                        url: data.imageUrl,
+                        url: data.imageData,
                         text: data.caption || ""
                     });
                 });
@@ -934,6 +932,15 @@
             }
         });
 
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         function showStatus(message, isError = false) {
             uploadStatus.textContent = message;
             uploadStatus.style.background = isError ? 
@@ -960,21 +967,22 @@
 
             try {
                 for (const file of selectedFiles) {
-                    const timestamp = Date.now();
-                    const fileName = `${timestamp}_${file.name}`;
-                    const storageRef = ref(storage, `gallery/${fileName}`);
+                    if (file.size > 1024 * 1024) {
+                        showStatus(`${file.name}은(는) 너무 큽니다 (1MB 이하만 가능)`, true);
+                        continue;
+                    }
 
-                    await uploadBytes(storageRef, file);
-                    const downloadURL = await getDownloadURL(storageRef);
+                    const base64Data = await fileToBase64(file);
+                    const timestamp = Date.now();
 
                     await addDoc(collection(db, "gallery"), {
-                        imageUrl: downloadURL,
+                        imageData: base64Data,
                         caption: caption,
                         timestamp: timestamp
                     });
 
                     allImages.unshift({
-                        url: downloadURL,
+                        url: base64Data,
                         text: caption
                     });
                 }
