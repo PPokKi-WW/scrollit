@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Galler</title>
+    <title>Gallery - 윤여지</title>
     <style>
-        /* ========== CSS 변수 ========== */
         :root {
-            --cols: 4;
-            /* 고정된 컬럼 수 */
             --row-height: 250px;
         }
 
-        /* ========== 기본 리셋 ========== */
         * {
             box-sizing: border-box;
         }
@@ -32,7 +27,6 @@
             padding: 0;
         }
 
-        /* ========== 갤러리 ========== */
         .gallery {
             display: flex;
             flex-wrap: wrap;
@@ -61,7 +55,7 @@
         }
 
         .photo:hover img {
-            border: 5px solid tomato
+            transform: scale(1.05);
         }
 
         .photo:focus {
@@ -69,7 +63,6 @@
             outline-offset: 2px;
         }
 
-        /* ========== 라이트박스 ========== */
         .lightbox {
             position: fixed;
             inset: 0;
@@ -95,7 +88,6 @@
         .lightbox-content {
             position: relative;
             max-width: 90vw;
-            max-height: none;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,31 +99,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            max-width: 90vw;
-            max-height: 85vh;
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: calc(92vh - 80px);
             background: transparent;
         }
 
         .lightbox-content img {
-            max-width: 90vw;
-            max-height: 85vh;
-            /*어떤 화면 크기든 화면높이의 85%를 넘지않음*/
+            max-width: 100%;
+            max-height: 100%;
             width: auto;
             height: auto;
             display: block;
             object-fit: contain;
         }
 
-        /* 텍스트를 이미지 아래로 표시 */
         .lightbox-text {
             color: #000000;
             font-size: 16px;
             line-height: 1.8;
             max-width: 90vw;
             padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.577);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
             white-space: pre-wrap;
             word-wrap: break-word;
             text-align: left;
@@ -166,7 +155,6 @@
             background: rgb(83, 99, 9);
         }
 
-        /* ========== 업로드 버튼 ========== */
         .upload_box {
             position: fixed;
             top: 50%;
@@ -195,7 +183,6 @@
             transform: translateX(4px);
         }
 
-        /* ========== 사이드 토글 버튼 ========== */
         .side-toggle-wrapper {
             position: fixed;
             right: 16px;
@@ -225,7 +212,6 @@
             background: #ff1a73;
         }
 
-        /* ========== 사이드 패널 ========== */
         .side-panel {
             position: fixed;
             top: 0;
@@ -246,7 +232,7 @@
         }
 
         .upload-panel {
-            background: #4d3dff;
+            background: #ff3d8b;
             left: 0;
             right: auto;
         }
@@ -298,11 +284,10 @@
             margin-bottom: 16px;
         }
 
-        /* ========== 업로드 영역 ========== */
         .upload-area {
             margin: 20px 0;
             border: 3px dashed rgba(255, 255, 255, 0.5);
-            /*border-radius: 12px;*/
+            border-radius: 12px;
             padding: 40px 20px;
             text-align: center;
             transition: all 0.3s ease;
@@ -385,7 +370,7 @@
             width: 100%;
             padding: 12px;
             border: 2px solid rgba(255, 255, 255, 0.5);
-
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             font-size: 16px;
@@ -405,12 +390,12 @@
         }
 
         .submit-upload-btn {
-            width: 40%;
-            padding: 20px;
-            background: #ffffff9d;
-            color: #743dff;
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #ff3d8b;
             border: none;
-
+            border-radius: 8px;
             font-size: 20px;
             font-weight: 600;
             letter-spacing: 3px;
@@ -419,7 +404,7 @@
             margin-top: 20px;
         }
 
-        .submit-upload-btn:hover {
+        .submit-upload-btn:hover:not(:disabled) {
             background: #f0f0f0;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -431,7 +416,21 @@
             transform: none;
         }
 
-        /* ========== 푸터 ========== */
+        .upload-status {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        .upload-status.show {
+            display: block;
+        }
+
         .fixed-footer {
             position: fixed;
             left: 0;
@@ -455,7 +454,6 @@
             pointer-events: auto;
         }
 
-        /* ========== 탑 버튼 ========== */
         .top_button {
             position: fixed;
             left: 16px;
@@ -476,8 +474,8 @@
             background: #3d54ff76;
             color: #0033cc;
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             font-size: 18px;
             font-weight: 500;
@@ -495,14 +493,13 @@
             box-shadow: 0 6px 20px rgba(61, 84, 255, 0.5);
         }
 
-        /* ========== 입장 팝업 ========== */
         .welcome-modal {
             position: fixed;
             inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(94, 120, 41, 0.427);
+            background: rgba(255, 255, 255, 0.95);
             z-index: 2000;
             opacity: 1;
             pointer-events: auto;
@@ -531,7 +528,6 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -545,9 +541,9 @@
             max-width: 90vw;
             max-height: 70vh;
             background: transparent;
-
+            border-radius: 8px;
             overflow: hidden;
-
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .welcome-imgwrap img {
@@ -559,7 +555,6 @@
             object-fit: contain;
         }
 
-        /* 팝업 텍스트도 이미지 아래로 */
         .welcome-text {
             color: #333;
             font-size: 16px;
@@ -588,7 +583,7 @@
         }
 
         .welcome-close {
-            background: #1f759da9;
+            background: #000;
             color: #fff;
             border: none;
             padding: 12px 40px;
@@ -597,27 +592,24 @@
             letter-spacing: 3px;
             cursor: pointer;
             transition: all 200ms ease;
-            border-radius: 1px;
+            border-radius: 4px;
         }
 
         .welcome-close:hover {
-            background: #a15252;
+            background: #333;
             transform: translateY(-2px);
-
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* ========== 반응형 ========== */
         @media (max-width: 900px) {
             :root {
                 --row-height: 200px;
             }
-
             .upload-btn {
                 padding: 40px 8px;
                 font-size: 16px;
                 min-width: 80px;
             }
-
             .side-toggle-btn {
                 padding: 60px 30px;
                 font-size: 18px;
@@ -629,7 +621,6 @@
                 width: 100vw;
                 max-width: 100vw;
             }
-
             .fixed-footer__style {
                 font-size: 12px;
                 padding: 6px 10px;
@@ -641,28 +632,23 @@
             :root {
                 --row-height: 150px;
             }
-
             .upload_box {
                 left: 10px;
             }
-
             .upload-btn {
                 padding: 30px 6px;
                 font-size: 14px;
                 min-width: 60px;
             }
-
             .side-toggle-btn {
                 padding: 40px 20px;
                 font-size: 16px;
             }
-
             .click-top-btn {
                 width: 60px;
                 height: 60px;
                 font-size: 14px;
             }
-
             .lightbox-close {
                 right: 5px;
                 bottom: 20px;
@@ -681,7 +667,7 @@
         </div>
 
         <div class="top_button">
-            <button id="clickTopBtn" class="click-top-btn">↑</button>
+            <button id="clickTopBtn" class="click-top-btn">TOP</button>
         </div>
 
         <div class="side-toggle-wrapper">
@@ -698,7 +684,7 @@
                     <div class="upload-area">
                         <label for="fileInput" class="file-upload-label">
                             <div class="upload-icon">📁</div>
-                            <p></p>
+                            <p>이미지를 업로드!</p>
                             <p style="font-size: 14px; color: rgba(255,255,255,0.8);">클릭하거나 드래그 앤 드롭</p>
                         </label>
                         <input id="fileInput" type="file" accept="image/*" multiple style="display: none" />
@@ -709,6 +695,7 @@
                         <textarea id="captionInput" placeholder="이미지를 업로드! 새로운 칸을 채워봅시다." rows="4"></textarea>
                     </div>
                     <button id="submitUploadBtn" class="submit-upload-btn">OK!</button>
+                    <div id="uploadStatus" class="upload-status"></div>
                 </div>
             </div>
         </aside>
@@ -744,7 +731,6 @@
             <div class="lightbox-imgwrap">
                 <img id="lightboxImg" src="" alt="확대한 이미지" />
             </div>
-
             <div id="lightboxText" class="lightbox-text"></div>
             <button id="lightboxClose" class="lightbox-close" aria-label="닫기">✕</button>
         </div>
@@ -756,38 +742,46 @@
                 <img id="welcomeImg" src="" alt="오늘의 이미지" />
             </div>
             <div id="welcomeText" class="welcome-text"></div>
-            <div id="welcomeCaption" class="welcome-caption">Today</div>
-            <button id="welcomeClose" class="welcome-close" aria-label="닫기">어라? 들어가기..</button>
+            <div id="welcomeCaption" class="welcome-caption">오늘의 사진</div>
+            <button id="welcomeClose" class="welcome-close" aria-label="닫기">Enter</button>
         </div>
     </div>
 
-    <script>
-        const imageTexts = {
-            "https://picsum.photos/id/1015/800/600": "",
-            "https://picsum.photos/id/1025/800/600": "아주 귀여운 강아지..\n 털과 보송보송한 그것을 발견",
-            "https://picsum.photos/id/1035/800/600": "세 번째 이미지\n\n- 항목 1\n- 항목 2\n- 항목 3",
-    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1AtCeDkgLoE8PFzBjjdfFKHq0vWB1cNI",
+            authDomain: "scrollit-9556f.firebaseapp.com",
+            projectId: "scrollit-9556f",
+            storageBucket: "scrollit-9556f.firebasestorage.app",
+            messagingSenderId: "750918986653",
+            appId: "1:750918986653:web:46871d2f5a0c942a441d74"
         };
 
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
         const defaultImages = [
-            "https://picsum.photos/id/1015/800/600",
-            "https://picsum.photos/id/1025/800/600",
-            "https://picsum.photos/id/1035/800/600",
-            "https://picsum.photos/id/1040/800/600",
-            "https://picsum.photos/id/1060/800/600",
-            "https://picsum.photos/id/1070/800/600",
-            "https://picsum.photos/id/1084/800/600",
-            "https://picsum.photos/id/1080/800/600",
-            "https://picsum.photos/id/1020/800/600",
-            "https://picsum.photos/id/1003/800/600",
-            "https://picsum.photos/id/1011/800/600",
-            "https://picsum.photos/id/1016/800/600",
-            "https://picsum.photos/id/1018/800/600",
-            "https://picsum.photos/id/1022/800/600",
-            "https://picsum.photos/id/1027/800/600",
-            "https://picsum.photos/id/1031/800/600",
-            "images/one (2).jpg",
-            "images/one (3).jpg"
+            { url: "https://picsum.photos/id/1015/800/600", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
+            { url: "https://picsum.photos/id/1025/800/600", text: "두 번째 이미지의 설명\n\n여러 줄로 작성할 수 있습니다." },
+            { url: "https://picsum.photos/id/1035/800/600", text: "세 번째 이미지" },
+            { url: "https://picsum.photos/id/1040/800/600", text: "" },
+            { url: "https://picsum.photos/id/1060/800/600", text: "" },
+            { url: "https://picsum.photos/id/1070/800/600", text: "" },
+            { url: "https://picsum.photos/id/1084/800/600", text: "" },
+            { url: "https://picsum.photos/id/1080/800/600", text: "" },
+            { url: "https://picsum.photos/id/1020/800/600", text: "" },
+            { url: "https://picsum.photos/id/1003/800/600", text: "" },
+            { url: "https://picsum.photos/id/1011/800/600", text: "" },
+            { url: "https://picsum.photos/id/1016/800/600", text: "" },
+            { url: "https://picsum.photos/id/1018/800/600", text: "" },
+            { url: "https://picsum.photos/id/1022/800/600", text: "" },
+            { url: "https://picsum.photos/id/1027/800/600", text: "" },
+            { url: "https://picsum.photos/id/1031/800/600", text: "" },
         ];
 
         const gallery = document.getElementById("gallery");
@@ -812,32 +806,54 @@
         const submitUploadBtn = document.getElementById("submitUploadBtn");
         const fileList = document.getElementById("fileList");
         const uploadArea = document.querySelector(".upload-area");
+        const uploadStatus = document.getElementById("uploadStatus");
 
-        let imageSources = [];
+        let allImages = [];
         let lastFocusedEl = null;
-        const createdObjectURLs = new Set();
         let selectedFiles = [];
 
         function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
             }
-            return array;
+            return newArray;
+        }
+
+        async function loadImagesFromFirebase() {
+            try {
+                const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                const firebaseImages = [];
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    firebaseImages.push({
+                        url: data.imageUrl,
+                        text: data.caption || ""
+                    });
+                });
+
+                return firebaseImages;
+            } catch (error) {
+                console.error("Firebase 이미지 로드 실패:", error);
+                return [];
+            }
         }
 
         function renderGallery(images) {
             gallery.innerHTML = "";
             const fragment = document.createDocumentFragment();
 
-            images.forEach((src) => {
+            images.forEach((item) => {
                 const a = document.createElement("a");
                 a.className = "photo";
-                a.href = src;
+                a.href = item.url;
                 a.setAttribute("aria-label", "이미지 보기");
 
                 const img = document.createElement("img");
-                img.src = src;
+                img.src = item.url;
                 img.alt = "갤러리 이미지";
 
                 img.addEventListener("error", () => {
@@ -847,7 +863,7 @@
 
                 a.addEventListener("click", (e) => {
                     e.preventDefault();
-                    openLightbox(src);
+                    openLightbox(item.url, item.text);
                 });
 
                 a.appendChild(img);
@@ -856,7 +872,7 @@
 
             gallery.appendChild(fragment);
         }
-        // ========== 파일 업로드 ==========
+
         fileInput.addEventListener("change", (e) => {
             const files = Array.from(e.target.files).filter((f) =>
                 f.type.startsWith("image/")
@@ -918,7 +934,19 @@
             }
         });
 
-        submitUploadBtn.addEventListener("click", () => {
+        function showStatus(message, isError = false) {
+            uploadStatus.textContent = message;
+            uploadStatus.style.background = isError ? 
+                'rgba(255, 0, 0, 0.3)' : 
+                'rgba(0, 255, 0, 0.3)';
+            uploadStatus.classList.add('show');
+            
+            setTimeout(() => {
+                uploadStatus.classList.remove('show');
+            }, 3000);
+        }
+
+        submitUploadBtn.addEventListener("click", async () => {
             if (selectedFiles.length === 0) {
                 alert("이미지를 선택해주세요!");
                 return;
@@ -926,23 +954,44 @@
 
             const caption = captionInput.value.trim();
 
-            const urls = selectedFiles.map((f) => {
-                const url = URL.createObjectURL(f);
-                createdObjectURLs.add(url);
+            submitUploadBtn.disabled = true;
+            submitUploadBtn.textContent = "업로드 중...";
+            showStatus("업로드 중입니다...");
 
-                if (caption) {
-                    imageTexts[url] = caption;
+            try {
+                for (const file of selectedFiles) {
+                    const timestamp = Date.now();
+                    const fileName = `${timestamp}_${file.name}`;
+                    const storageRef = ref(storage, `gallery/${fileName}`);
+
+                    await uploadBytes(storageRef, file);
+                    const downloadURL = await getDownloadURL(storageRef);
+
+                    await addDoc(collection(db, "gallery"), {
+                        imageUrl: downloadURL,
+                        caption: caption,
+                        timestamp: timestamp
+                    });
+
+                    allImages.unshift({
+                        url: downloadURL,
+                        text: caption
+                    });
                 }
 
-                return url;
-            });
+                renderGallery(shuffle(allImages));
+                
+                showStatus("업로드 완료! 🎉");
+                closeUploadPanel();
+                resetUploadForm();
 
-            imageSources = urls.concat(imageSources);
-            shuffle(imageSources);
-            renderGallery(imageSources);
-
-            closeUploadPanel();
-            resetUploadForm();
+            } catch (error) {
+                console.error("업로드 실패:", error);
+                showStatus("업로드 실패. 다시 시도해주세요.", true);
+            } finally {
+                submitUploadBtn.disabled = false;
+                submitUploadBtn.textContent = "OK!";
+            }
         });
 
         function resetUploadForm() {
@@ -952,16 +1001,10 @@
             fileInput.value = "";
         }
 
-
-
-        // ========== 라이트박스 (이미지 확대) ==========
-
-        function openLightbox(src) {
+        function openLightbox(url, text) {
             lastFocusedEl = document.activeElement;
-            lightboxImg.src = src;
-
-            const text = imageTexts[src] || "";
-            lightboxText.textContent = text;
+            lightboxImg.src = url;
+            lightboxText.textContent = text || "";
 
             lightbox.setAttribute("aria-hidden", "false");
             lightbox.classList.add("open");
@@ -1031,11 +1074,6 @@
         });
         lightboxClose.addEventListener("click", closeLightbox);
 
-
-
-        // ========== 사이드 패널 ==========
-
-
         function openSidePanel() {
             sidePanel.classList.add("open");
             sidePanel.setAttribute("aria-hidden", "false");
@@ -1084,9 +1122,6 @@
             }
         });
 
-
-        //=======오늘의 이미지========
-
         function getTodayImageIndex() {
             const today = new Date();
             const dateNumber = today.getFullYear() * 10000 +
@@ -1100,10 +1135,8 @@
             const todayIndex = getTodayImageIndex();
             const todayImage = defaultImages[todayIndex];
 
-            welcomeImg.src = todayImage;
-
-            const text = imageTexts[todayImage] || "";
-            welcomeText.textContent = text;
+            welcomeImg.src = todayImage.url;
+            welcomeText.textContent = todayImage.text || "";
 
             welcomeModal.setAttribute("aria-hidden", "false");
             welcomeModal.classList.remove("hidden");
@@ -1141,21 +1174,17 @@
             }
         }, { passive: true });
 
-
-
-        // ========== 초기화 ==========
-
-        function init() {
-            imageSources = defaultImages.slice();
-            shuffle(imageSources);
-            renderGallery(imageSources);
+        async function init() {
+            const firebaseImages = await loadImagesFromFirebase();
+            allImages = [...firebaseImages, ...defaultImages];
+            
+            const shuffledImages = shuffle(allImages);
+            renderGallery(shuffledImages);
+            
             showWelcomeModal();
         }
 
         window.addEventListener("load", init);
     </script>
 </body>
-
-
 </html>
-
