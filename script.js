@@ -14,9 +14,6 @@
         const db = getFirestore(app);
 
         const defaultImages = [
-            { url: "asd (366).png", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
-            { url: "asd (365).png", text: "두 번째 이미지의 설명\n여러 줄로 작성할 수 있습니다." },
-            { url: "asd (354).jpg", text: "세 번째 이미지" },
            { url: "images/asd (366).png", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
             { url: "images/asd (365).png", text: "두 번째 이미지의 설명\n여러 줄로 작성할 수 있습니다." },
             { url: "images/asd (364).jpg", text: "세 번째 이미지" },
@@ -447,4 +444,5 @@
 
 
         window.addEventListener("load", init);
+
 
