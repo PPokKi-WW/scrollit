@@ -14,16 +14,21 @@
         const db = getFirestore(app);
 
         const defaultImages = [
-            { url: "https://picsum.photos/id/1015/800/600", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
-            { url: "https://picsum.photos/id/1025/800/600", text: "두 번째 이미지의 설명\n여러 줄로 작성할 수 있습니다." },
-            { url: "https://picsum.photos/id/1035/800/600", text: "세 번째 이미지" },
-            { url: "https://picsum.photos/id/1040/800/600", text: "" },
-            { url: "https://picsum.photos/id/1060/800/600", text: "" },
-            { url: "https://picsum.photos/id/1070/800/600", text: "" },
-            { url: "https://picsum.photos/id/1084/800/600", text: "" },
-            { url: "https://picsum.photos/id/1080/800/600", text: "" },
-            { url: "https://picsum.photos/id/1020/800/600", text: "" },
-            { url: "https://picsum.photos/id/1003/800/600", text: "" },
+            { url: "asd (366).png", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
+            { url: "asd (365).png", text: "두 번째 이미지의 설명\n여러 줄로 작성할 수 있습니다." },
+            { url: "asd (354).jpg", text: "세 번째 이미지" },
+           { url: "images/asd (366).png", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
+            { url: "images/asd (365).png", text: "두 번째 이미지의 설명\n여러 줄로 작성할 수 있습니다." },
+            { url: "images/asd (364).jpg", text: "세 번째 이미지" },
+            { url: "images/asd (355).jpg", text: "" },
+            { url: "images/asd (356).jpg", text: "" },
+{ url: "images/asd (357).jpg", text: "" },
+{ url: "images/asd (358).jpg", text: "" },
+{ url: "images/asd (359).jpg", text: "" },
+{ url: "images/asd (360).jpg", text: "" },
+{ url: "images/asd (361).jpg", text: "" },
+{ url: "images/asd (362).jpg", text: "" },
+{ url: "images/asd (363).JPEG", text: "" },
             { url: "https://picsum.photos/id/1011/800/600", text: "" },
             { url: "https://picsum.photos/id/1016/800/600", text: "" },
             { url: "https://picsum.photos/id/1018/800/600", text: "" },
@@ -444,5 +449,6 @@
 
             showWelcomeModal();
         }
+
 
         window.addEventListener("load", init);
