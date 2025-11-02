@@ -1,0 +1,879 @@
+  @import url("https://use.typekit.net/rth4bus.css");
+
+  @font-face {
+      font-family: '116Angdeokjeongjik';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/116angduk_honesty15.woff2') format('woff2');
+      font-weight: normal;
+      font-display: swap;
+  }
+
+  :root {
+      --row-height: 250px;
+  }
+
+  * {
+      box-sizing: border-box;
+  }
+
+  body {
+      margin: 0;
+
+      font-variation-settings: "STRS" 0, "wdth" 50, "wght" 100;
+      font-family: '116Angdeokjeongjik', "black-pack-vf", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Helvetica Neue", Arial, sans-serif;
+      background: #00d0ff;
+      color: #222;
+      line-height: 1.6;
+  }
+
+  main {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+  }
+
+  .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+  }
+
+  .photo {
+      display: block;
+      height: var(--row-height);
+      flex-shrink: 0;
+      cursor: pointer;
+      text-decoration: none;
+      overflow: hidden;
+      position: relative;
+  }
+
+  .photo img {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      transition: transform 220ms ease;
+  }
+
+  .photo:hover img {
+      transform: scale(1.05);
+  }
+
+  .photo:focus {
+      outline: 3px solid #e2ad4a;
+      outline-offset: 2px;
+  }
+
+  .lightbox {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(3, 0, 63, 0.943);
+      z-index: 1400;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+  }
+
+  .lightbox.open {
+      opacity: 1;
+      pointer-events: auto;
+  }
+
+  .lightbox[aria-hidden="true"] {
+      visibility: hidden;
+  }
+
+  .lightbox-content {
+      position: relative;
+      max-width: 90vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+  }
+
+  .lightbox-imgwrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 90vw;
+      max-height: 85vh;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+  }
+
+  .lightbox-content img {
+      max-width: 90vw;
+      max-height: 85vh;
+      width: auto;
+      height: auto;
+      display: block;
+      object-fit: contain;
+  }
+
+  .lightbox-text {
+      color: #000000;
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 90vw;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 3px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      text-align: left;
+      max-height: 200px;
+      overflow-y: auto;
+  }
+
+  .lightbox-text:empty {
+      display: none;
+  }
+
+  .lightbox-close {
+      position: absolute;
+      right: 10px;
+      bottom: 40px;
+      background: rgba(3, 0, 63, 0.943);
+      color: #fff;
+      border-radius: 10%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      transition: background 200ms ease;
+      z-index: 10;
+  }
+
+  .lightbox-close:hover {
+      background: rgba(175, 171, 244, 0.943);
+  }
+
+  /**********************************************/
+
+  .side-panel-inner {
+      padding: 24px;
+  }
+
+
+
+  /*오른쪽 패널 버튼*/
+
+
+  .right-side-toggle-wrapper {
+      position: fixed;
+      right: 4vw;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      transition: opacity 300ms ease;
+  }
+
+
+  .right-side-toggle-wrapper.hidden {
+      display: none;
+  }
+
+  .right-side-toggle-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+      transition: transform 0.2s ease;
+  }
+
+
+  .rightbtn-img {
+      width: 10vw;
+      /* 창 가로의 10% */
+      max-width: 150px;
+      /* 너무 커지는 걸 방지 */
+      height: auto;
+      transition: transform 0.2s ease;
+  }
+
+
+  .right-side-toggle-btn:hover {
+      transform: scale(1.05);
+
+  }
+
+
+
+
+  /*오른쪽 패널 내부*/
+  .side-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 50vw;
+      max-width: 760px;
+      background: #FF7ADB;
+      color: #000;
+      display: none;
+      transition: transform 300ms ease;
+      z-index: 1350;
+      overflow-y: auto;
+      padding: 0;
+      transform: translateX(100%);
+
+
+  }
+
+  .side-panel.open {
+      display: block;
+      transform: translateX(0);
+
+  }
+
+
+  /* 패널 내부 전체 레이아웃 */
+  .panel-content {
+      /*display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 60px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 40px;*/
+      position: relative;
+      width: 100%;
+      height: 100%;
+      font-family: '116angduk_honesty1.5', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      font-style: normal;
+      line-height: normal;
+      color: #000;
+  }
+
+
+
+
+  .text-top {
+      text-align: left;
+
+  }
+
+  .text-bottom {
+      text-align: left;
+
+
+  }
+
+  /* SVG 영역 */
+  .svg-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .panel-svg {
+      width: 300px;
+      /* 필요에 따라 조정 */
+      max-width: 60%;
+      height: auto;
+      display: block;
+  }
+
+  /* 닫기 버튼 */
+  .rsp-close {
+      position: relative;
+      bottom: 10px;
+      left: 10px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      z-index: 2000;
+
+      width: 5vw;
+      height: 7vh;
+
+
+  }
+
+  .rsp-close:hover {
+      transform: scale(1.1);
+  }
+
+  .close-svg-img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+
+  }
+
+  /**************************************************/
+
+
+  /*왼쪽 버튼*/
+  .left_box {
+      position: fixed;
+      top: 50%;
+      left: 4vw;
+      transform: translateY(-50%);
+      z-index: 1000;
+      transition: opacity 300ms ease;
+  }
+
+  .upload-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+      transition: all 0.2s ease;
+  }
+
+  .leftbtn-img {
+      width: 10vw;
+      /* 창 가로의 10% */
+      max-width: 150px;
+      /* 너무 커지는 걸 방지 */
+      height: auto;
+      transition: transform 0.2s ease;
+  }
+
+
+  .upload-btn:hover {
+      transform: scale(1.05);
+
+  }
+
+
+  /*왼쪽 패널*/
+  .upload-panel {
+      background: #3E00CF;
+      left: 0;
+      right: auto;
+  }
+
+  .sp-head {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 20px;
+  }
+
+  /*닫기 버튼*/
+  .lsp-close {
+      position: absolute;
+      top: 2vh;
+      left: 2vw;
+      width: 4vw;
+      height: 4vw;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      z-index: 2000;
+  }
+
+
+
+  .lsp-close:hover {
+      transform: scale(1.1);
+  }
+
+  .sp-body {
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.8;
+  }
+
+  /*.sp-body h2 {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin: 0 0 30px 0;
+}*/
+
+  .sp-body p {
+      margin-bottom: 16px;
+  }
+
+
+  /*파일 업로드 란*/
+  .upup {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 2vh;
+      background: none;
+      border: none;
+      cursor: pointer;
+  }
+
+  .upup img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+  }
+
+  .upload-area {
+      margin: 20px 0;
+      border: 3px dotted rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+  }
+
+  .upload-area:hover {
+      border-color: #000000;
+      background: rgba(255, 255, 255, 0.1);
+  }
+
+  .upload-area.drag-over {
+      border-color: #000000;
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+  }
+
+  .file-upload-label {
+      display: block;
+      cursor: pointer;
+  }
+
+  .upload-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+  }
+
+  .file-list {
+      margin: 20px 0;
+      max-height: 200px;
+      overflow-y: auto;
+  }
+
+  .file-item {
+      border: dotted;
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+  }
+
+  .file-item-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  }
+
+  .file-item-remove {
+      background: rgba(255, 255, 255, 0);
+      border: dotted;
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: background 0.2s;
+  }
+
+  .file-item-remove:hover {
+      background: rgba(255, 255, 255, 0.5);
+  }
+
+
+  /*캡션 작성란*/
+  .caption-label {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 2vh;
+  }
+
+  .caption-label img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+  }
+
+  .caption-area {
+      margin: 20px 0;
+  }
+
+  .caption-area label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      font-size: 18px;
+  }
+
+  .caption-area textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 16px;
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color 0.3s;
+  }
+
+  .caption-area textarea:focus {
+      outline: none;
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+  }
+
+  .caption-area textarea::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+  }
+
+
+  /*ok버튼*/
+  .submit-upload-btn {
+
+      display: flex;
+      justify-content: flex-end;
+
+      width: 100vw;
+      min-width: 80px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+
+
+
+
+  }
+
+  .submit-upload-btn:hover:not(:disabled) {
+
+      transform: translateY(-2px);
+
+  }
+
+  .submit-upload-btn:disabled {
+      background: rgba(255, 255, 255, 0.5);
+      cursor: not-allowed;
+      transform: none;
+  }
+
+  .okupload-svg-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+
+
+  }
+
+
+  .upload-status {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+  }
+
+  .upload-status.show {
+      display: block;
+  }
+
+
+
+  /************************/
+
+  .fixed-footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 20px;
+      display: flex;
+      justify-content: center;
+      z-index: 999;
+      pointer-events: none;
+  }
+
+  .fixed-footer__style {
+      display: inline-block;
+      background: rgba(0, 255, 4, 0.545);
+      color: #000000;
+      text-align: center;
+      font-size: 20px;
+      line-height: 1.2;
+      padding: 5px 14px;
+      min-width: 180px;
+      pointer-events: auto;
+  }
+
+  /***************/
+
+  .top_button {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      top: 10%;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 300ms ease, transform 300ms ease;
+  }
+
+  .top_button.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-50%) scale(0.8);
+  }
+
+  .click-top-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+  }
+
+  .topbtn-img {
+      width: 10vw;
+      /* 창 가로의 10% */
+      max-width: 80px;
+      /* 너무 커지는 걸 방지 */
+      height: auto;
+      transition: transform 0.2s ease;
+  }
+
+  .click-top-btn:hover {
+      transform: scale(1.05);
+  }
+
+
+  /************************************/
+
+  .welcome-modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 209, 251, 0.95);
+      z-index: 2000;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 300ms ease;
+  }
+
+  .welcome-modal.hidden {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+  }
+
+  .welcome-content {
+      position: relative;
+      max-width: 90vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      animation: welcomeFadeIn 0.5s ease;
+  }
+
+  @keyframes welcomeFadeIn {
+      from {
+          opacity: 0;
+          transform: translateY(-20px);
+      }
+
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
+  .welcome-imgwrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 90vw;
+      max-height: 70vh;
+      background: transparent;
+
+      overflow: hidden;
+
+  }
+
+  .welcome-imgwrap img {
+      max-width: 90vw;
+      max-height: 70vh;
+      width: auto;
+      height: auto;
+      display: block;
+      object-fit: contain;
+  }
+
+  .welcome-text {
+      color: #333;
+
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 90vw;
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      text-align: left;
+      max-height: 200px;
+      overflow-y: auto;
+  }
+
+  .welcome-text:empty {
+      display: none;
+  }
+
+  .welcome-caption {
+      font-family: "black-pack-vf", sans-serif;
+      font-variation-settings: "STRS" 0, "wdth" 50, "wght" 100;
+      color: #333;
+      font-size: 24px;
+      font-weight: 300;
+      text-align: center;
+      letter-spacing: 2px;
+  }
+
+  .welcome-close {
+      font-family: "black-pack-vf", sans-serif;
+      font-variation-settings: "STRS" 0, "wdth" 50, "wght" 100;
+      color: #333;
+      border: none;
+      background: #ffffff;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: px;
+      cursor: pointer;
+      transition: all 200ms ease;
+
+  }
+
+  .welcome-close:hover {
+      background: #333;
+      color: #ffffff;
+      transform: translateY(-2px);
+
+  }
+
+
+
+
+  /***************************************/
+
+  @media (max-width: 900px) {
+      :root {
+          --row-height: 200px;
+      }
+
+      .upload-btn {
+          padding: 40px 8px;
+          font-size: 16px;
+          min-width: 80px;
+      }
+
+      .right-side-toggle-btn {
+          padding: 60px 30px;
+          font-size: 18px;
+      }
+  }
+
+  @media (max-width: 768px) {
+      .side-panel {
+          width: 100vw;
+          max-width: 100vw;
+      }
+
+      .fixed-footer__style {
+          font-size: 12px;
+          padding: 6px 10px;
+          min-width: 150px;
+      }
+
+  }
+
+  @media (max-width: 480px) {
+      :root {
+          --row-height: 150px;
+      }
+
+      .left_box {
+          left: 10px;
+      }
+
+      .upload-btn {
+          padding: 30px 6px;
+          font-size: 14px;
+          min-width: 60px;
+      }
+
+      .right-side-toggle-btn {
+          padding: 40px 20px;
+          font-size: 16px;
+      }
+
+      .click-top-btn {
+          width: 60px;
+          height: 60px;
+          font-size: 14px;
+      }
+
+      .lightbox-close {
+          right: 5px;
+          bottom: 20px;
+          width: 32px;
+          height: 32px;
+          font-size: 18px;
+      }
+  }
