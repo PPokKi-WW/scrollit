@@ -1,717 +1,127 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Gallery - 윤여지</title>
-    <style>
-        :root {
-            --row-height: 250px;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Helvetica Neue", Arial, sans-serif;
-            background: #ffffff;
-            color: #222;
-            line-height: 1.6;
-        }
-
-        main {
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            gap: 0;
-        }
-
-        .photo {
-            display: block;
-            height: var(--row-height);
-            flex-shrink: 0;
-            cursor: pointer;
-            text-decoration: none;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .photo img {
-            height: 100%;
-            width: auto;
-            display: block;
-            object-fit: contain;
-            transition: transform 220ms ease;
-        }
-
-        .photo:hover img {
-            transform: scale(1.05);
-        }
-
-        .photo:focus {
-            outline: 3px solid #4a90e2;
-            outline-offset: 2px;
-        }
-
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(251, 255, 0, 0.414);
-            z-index: 1400;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 180ms ease;
-        }
-
-        .lightbox.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .lightbox[aria-hidden="true"] {
-            visibility: hidden;
-        }
-
-        .lightbox-content {
-            position: relative;
-            max-width: 90vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-        }
-
-        .lightbox-imgwrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            max-width: 100%;
-            max-height: calc(92vh - 80px);
-            background: transparent;
-        }
-
-        .lightbox-content img {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            display: block;
-            object-fit: contain;
-        }
-
-        .lightbox-text {
-            color: #000000;
-            font-size: 16px;
-            line-height: 1.8;
-            max-width: 90vw;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .lightbox-text:empty {
-            display: none;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            right: 10px;
-            bottom: 40px;
-            background: rgb(103, 119, 11);
-            color: #fff;
-            border-radius: 10%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            transition: background 200ms ease;
-            z-index: 10;
-        }
-
-        .lightbox-close:hover {
-            background: rgb(83, 99, 9);
-        }
-
-        .upload_box {
-            position: fixed;
-            top: 50%;
-            left: 20px;
-            transform: translateY(-50%);
-            z-index: 1000;
-        }
-
-        .upload-btn {
-            display: block;
-            background: #e42e00;
-            color: #f8f8f8;
-            text-decoration: none;
-            padding: 60px 10px;
-            font-size: 20px;
-            font-weight: 150;
-            text-align: center;
-            min-width: 100px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .upload-btn:hover {
-            background: #3c31d7;
-            transform: translateX(4px);
-        }
-
-        .side-toggle-wrapper {
-            position: fixed;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1000;
-            transition: opacity 300ms ease;
-        }
-
-        .side-toggle-wrapper.hidden {
-            display: none;
-        }
-
-        .side-toggle-btn {
-            background: #ff3d8b;
-            color: #0033cc;
-            border: none;
-            padding: 80px 50px;
-            font-size: 20px;
-            font-weight: 150;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .side-toggle-btn:hover {
-            transform: translateX(-4px);
-            background: #ff1a73;
-        }
-
-        .side-panel {
-            position: fixed;
-            top: 0;
-            right: 0;
-            height: 100vh;
-            width: 50vw;
-            max-width: 760px;
-            background: #0a89c5;
-            display: none;
-            transition: transform 300ms ease;
-            z-index: 1350;
-            overflow-y: auto;
-            padding: 0;
-        }
-
-        .side-panel.open {
-            display: block;
-        }
-
-        .upload-panel {
-            background: #ff3d8b;
-            left: 0;
-            right: auto;
-        }
-
-        .side-panel-inner {
-            padding: 24px;
-        }
-
-        .sp-head {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .sp-close {
-            background: transparent;
-            color: #fff;
-            border: 2px solid #fff;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 200ms ease;
-        }
-
-        .sp-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .sp-body {
-            color: #fff;
-            font-size: 16px;
-            line-height: 1.8;
-        }
-
-        .sp-body h2 {
-            font-size: 32px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            margin: 0 0 30px 0;
-        }
-
-        .sp-body p {
-            margin-bottom: 16px;
-        }
-
-        .upload-area {
-            margin: 20px 0;
-            border: 3px dashed rgba(255, 255, 255, 0.5);
-            border-radius: 12px;
-            padding: 40px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .upload-area:hover {
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .upload-area.drag-over {
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.02);
-        }
-
-        .file-upload-label {
-            display: block;
-            cursor: pointer;
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .file-list {
-            margin: 20px 0;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .file-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #fff;
-        }
-
-        .file-item-name {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .file-item-remove {
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            color: #fff;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background 0.2s;
-        }
-
-        .file-item-remove:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .caption-area {
-            margin: 20px 0;
-        }
-
-        .caption-area label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            font-size: 18px;
-        }
-
-        .caption-area textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 16px;
-            font-family: inherit;
-            resize: vertical;
-            transition: border-color 0.3s;
-        }
-
-        .caption-area textarea:focus {
-            outline: none;
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .caption-area textarea::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .submit-upload-btn {
-            width: 100%;
-            padding: 15px;
-            background: #fff;
-            color: #ff3d8b;
-            border: none;
-            border-radius: 8px;
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .submit-upload-btn:hover:not(:disabled) {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .submit-upload-btn:disabled {
-            background: rgba(255, 255, 255, 0.5);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .upload-status {
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            color: #fff;
-            font-size: 14px;
-            text-align: center;
-            display: none;
-        }
-
-        .upload-status.show {
-            display: block;
-        }
-
-        .fixed-footer {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 20px;
-            display: flex;
-            justify-content: center;
-            z-index: 999;
-            pointer-events: none;
-        }
-
-        .fixed-footer__style {
-            display: inline-block;
-            background: rgba(0, 255, 4, 0.24);
-            color: #000000;
-            text-align: center;
-            font-size: 14px;
-            line-height: 1.4;
-            padding: 8px 14px;
-            min-width: 180px;
-            pointer-events: auto;
-        }
-
-        .top_button {
-            position: fixed;
-            left: 16px;
-            top: 10%;
-            transform: translateY(-50%);
-            z-index: 1000;
-            opacity: 1;
-            transition: opacity 300ms ease, transform 300ms ease;
-        }
-
-        .top_button.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-50%) scale(0.8);
-        }
-
-        .click-top-btn {
-            background: #3d54ff76;
-            color: #0033cc;
-            border: none;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            font-size: 18px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(61, 84, 255, 0.3);
-        }
-
-        .click-top-btn:hover {
-            background: #5a6dff;
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(61, 84, 255, 0.5);
-        }
-
-        .welcome-modal {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 2000;
-            opacity: 1;
-            pointer-events: auto;
-            transition: opacity 300ms ease;
-        }
-
-        .welcome-modal.hidden {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
-        }
-
-        .welcome-content {
-            position: relative;
-            max-width: 90vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            animation: welcomeFadeIn 0.5s ease;
-        }
-
-        @keyframes welcomeFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .welcome-imgwrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            max-width: 90vw;
-            max-height: 70vh;
-            background: transparent;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .welcome-imgwrap img {
-            max-width: 90vw;
-            max-height: 70vh;
-            width: auto;
-            height: auto;
-            display: block;
-            object-fit: contain;
-        }
-
-        .welcome-text {
-            color: #333;
-            font-size: 16px;
-            line-height: 1.8;
-            max-width: 90vw;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .welcome-text:empty {
-            display: none;
-        }
-
-        .welcome-caption {
-            color: #333;
-            font-size: 24px;
-            font-weight: 300;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-
-        .welcome-close {
-            background: #000;
-            color: #fff;
-            border: none;
-            padding: 12px 40px;
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 200ms ease;
-            border-radius: 4px;
-        }
-
-        .welcome-close:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        @media (max-width: 900px) {
-            :root {
-                --row-height: 200px;
-            }
-            .upload-btn {
-                padding: 40px 8px;
-                font-size: 16px;
-                min-width: 80px;
-            }
-            .side-toggle-btn {
-                padding: 60px 30px;
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .side-panel {
-                width: 100vw;
-                max-width: 100vw;
-            }
-            .fixed-footer__style {
-                font-size: 12px;
-                padding: 6px 10px;
-                min-width: 150px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            :root {
-                --row-height: 150px;
-            }
-            .upload_box {
-                left: 10px;
-            }
-            .upload-btn {
-                padding: 30px 6px;
-                font-size: 14px;
-                min-width: 60px;
-            }
-            .side-toggle-btn {
-                padding: 40px 20px;
-                font-size: 16px;
-            }
-            .click-top-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 14px;
-            }
-            .lightbox-close {
-                right: 5px;
-                bottom: 20px;
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-            }
-        }
-    </style>
+    <title>SCROLL IT!</title>
+    <link rel="stylesheet" href="style.css" />
+  
 </head>
 
 <body>
     <main>
-        <div class="upload_box">
-            <button id="openUploadBtn" class="upload-btn">More?</button>
+        <!--메인 버튼-->
+
+        <!--왼쪽 버튼-->
+        <div class="left_box">
+            <button id="openUploadBtn" class="upload-btn">
+                <img src="./more1.svg" alt="more" class="leftbtn-img">
+            </button>
         </div>
 
         <div class="top_button">
-            <button id="clickTopBtn" class="click-top-btn">🆙</button>
+            <button id="clickTopBtn" class="click-top-btn">
+                <img src="./top.svg" alt="top" class="topbtn-img">
+            </button>
         </div>
 
-        <div class="side-toggle-wrapper">
-            <button id="openSideBtn" class="side-toggle-btn">어라?</button>
+        <!--오른쪽 버튼-->
+        <div class="right-side-toggle-wrapper">
+            <button id="openSideBtn" class="right-side-toggle-btn">
+
+                <img src="./era1.svg" alt="어라" class="rightbtn-img">
+
+            </button>
         </div>
 
+
+        <!--왼쪽 패널-->
         <aside id="uploadPanel" class="side-panel upload-panel" aria-hidden="true">
             <div class="side-panel-inner">
                 <header class="sp-head">
-                    <button id="closeUploadBtn" class="sp-close" aria-label="패널 닫기">✕</button>
+
+                    <button id="closeUploadBtn" class="lsp-close" aria-label="패널 닫기">
+                        <img src="./cancel2.svg" alt="닫기" class="close-svg-img">
+                    </button>
+
+                    <button id="submitUploadBtn" class="submit-upload-btn">
+                        <img src="./OK.svg" alt="ok" class="okupload-svg-img">
+                    </button>
+                    <div id="uploadStatus" class="upload-status"></div>
+
                 </header>
+
                 <div class="sp-body">
-                    <h2>Upload</h2>
+
+                    <div class="caption-area">
+                        <label for="captionInput"> </label>
+                        <textarea id="captionInput" placeholder="무슨 이야기를 붙여줄 수 있을까요?" rows="4"></textarea>
+                    </div>
+                    <div class="caption-label">
+                        <img src="./caption.svg" alt="CAPTION" />
+                    </div>
+
+
                     <div class="upload-area">
                         <label for="fileInput" class="file-upload-label">
                             <div class="upload-icon">📁</div>
-                            <p>이미지를 업로드!</p>
-                            <p style="font-size: 14px; color: rgba(255,255,255,0.8);">클릭하거나 드래그 앤 드롭<br>(1MB 이하 권장)</p>
+                            <p>이곳에 업로드!</p>
+                            <p style="font-size: 14px; color: rgba(255,255,255,0.8);">
+                                클릭하거나 드래그 앤 드롭<br>(1MB 이하 권장)
+                            </p>
                         </label>
                         <input id="fileInput" type="file" accept="image/*" multiple style="display: none" />
                     </div>
+
                     <div id="fileList" class="file-list"></div>
-                    <div class="caption-area">
-                        <label for="captionInput">Caption</label>
-                        <textarea id="captionInput" placeholder="이미지를 업로드! 새로운 칸을 채워봅시다." rows="4"></textarea>
-                    </div>
-                    <button id="submitUploadBtn" class="submit-upload-btn">OK!</button>
-                    <div id="uploadStatus" class="upload-status"></div>
+                    <!-- UPLOAD 버튼 -->
+                    <button id="up-up" class="upup">
+                        <img src="./UPLOAD.svg" alt="UPLOAD" />
+                    </button>
+
+
                 </div>
             </div>
         </aside>
 
+
+        <!--오른쪽 패널-->
         <aside id="sidePanel" class="side-panel" aria-hidden="true">
             <div class="side-panel-inner">
                 <header class="sp-head">
-                    <button id="closeSideBtn" class="sp-close" aria-label="패널 닫기">✕</button>
-                </header>
-                <div class="sp-body">
-                    <p>어라?</p>
-                    <p>
-                        … 여기 펼쳐진 이미지들은 어떠한 모호한 규칙 하에 모여 무작위로 구성되었습니다. 주인장이 어라? 하며 찍어온 모습들은 꽤 익숙하기도 하면서, 낯선 뒷모습을 담고있기도 합니다. 이미지 속 대상들은 이게 무엇인지 뚜렷하게 설명될 수 없습니다. 하지만 이야기를 붙여볼 수는 있겠죠. 사진 속의 대상들을 관찰하며 주인장도 그닥 잘 알지 못하는 관계를 새로이 지어주었으면 합니다. 날 것의 묘사와 얼토당토 않는 말을 엮어보며 사진들을 헤집어보세요. 그리곤 MORE 버튼을 눌러 자신이 발견한 대상들을 추가하며 스크롤의 길이를 늘려주세요. 더욱 헤집어 둘 수록 어떤 그룹- 묶음- 휴지기를 이루는 사이트가 될지 궁금해집니다. 느슨하거나 비슷하거나 또는 엉성하거나. 저는 아직 그것들에 아무런 제목, 이름, 설명을 붙이지 못했습니다.
-함께 더해볼까요? 
 
-                    </p>
+
+                </header>
+                <div class="panel-content">
+                    <div class="text-top">
+                        <p>안녕하세요, 반갑습니다.. 윤여지입니다.<br>
+                            이곳에서 2020년 부터 현재까지 제가 일상을 살아가다 찾은 어라? 싶었던 모습들을 소개합니다. 이렇게 모인 이미지들을
+                            훑어보고- 탐색하고- 발견하며- 지나치거나- 꼼꼼히 살펴볼 수 있습니다.</p>
+                    </div>
+
+                    <div class="svg-wrap">
+                        <object type="image/svg+xml" data="./어라icon.svg" class="panel-svg"></object>
+                    </div>
+                    <div class="text-bottom">
+                        <p> 여기 펼쳐진 이미지들은 어떠한 모호한
+                            규칙 하에 모여 무작위로 구성되었습니다. 주인장이 어라?하며 찍어온 모습들은 꽤 익숙하기도 하면서, 낯선 뒷모습을 담고
+                            있기도 합니다. 이미지 속 대상들은 이게 무엇인지 뚜렷하게 설명될 수 없습니다. 하지만 이야기를 붙여볼 수는 있겠죠.
+                            사진 속의 대상들을 관찰하며 주인장도 그닥 잘 알지 못하는 관계를 새로이 지어주었으면 합니다. 날 것의 묘사와 얼토당토 않는 말을 엮어보며 사진들을
+                            헤집어보세요. 그리곤 MORE 버튼을
+                            눌러 자신이 발견한 대상들을 추가하며
+                            스크롤의 길이를 늘려주세요.
+                            더욱 헤집어 둘 수록 어떤 그룹, 뭉텅이
+                            또는 휴지 뭉치같은 사이트가 될지
+                            궁금해집니다. 느슨하거나 비슷하거나
+                            또는 엉성하거나. 저는 아직 그것들에
+                            아무런 제목, 이름을 붙이지 못했습니다.
+                            ...함께 더해볼까요?</p>
+                    </div>
+                    <button id="closeSideBtn" class="rsp-close" aria-label="닫기">
+                        <img src="./cancel1.svg" alt="닫기" class="close-svg-img">
+                    </button>
+
                 </div>
             </div>
         </aside>
@@ -721,8 +131,10 @@
 
     <footer class="fixed-footer" role="contentinfo" aria-label="사이트 소개">
         <div class="fixed-footer__style">
-            <marquee>안녕하세요, 반갑습니다.. 윤여지 입니다. 이곳에서 2020년 부터 현재까지 제가 일상을 살아가다 찾은 어라? 싶었던 모습들을 소개합니다. 이렇게 모인 이미지들을 훑어보고-
-                탐색하고- 발견하며- 지나치거나- 꼼꼼히 살펴볼 수 있습니다.</marquee>
+            <marquee>
+                안녕하세요, 반갑습니다.. 윤여지 입니다. 이곳에서 2020년 부터 현재까지 제가 일상을 살아가다 찾은 어라? 싶었던 모습들을 소개합니다.
+                이렇게 모인 이미지들을 훑어보고- 탐색하고- 발견하며- 지나치거나- 꼼꼼히 살펴볼 수 있습니다.
+            </marquee>
         </div>
     </footer>
 
@@ -739,460 +151,15 @@
     <div id="welcomeModal" class="welcome-modal" role="dialog" aria-modal="true" aria-hidden="false">
         <div class="welcome-content" role="document">
             <div class="welcome-imgwrap">
-                <img id="welcomeImg" src="" alt="오늘의 이미지" />
+                <img id="welcomeImg" src="" alt="TODAY..." />
             </div>
             <div id="welcomeText" class="welcome-text"></div>
-            <div id="welcomeCaption" class="welcome-caption">Today..</div>
-            <button id="welcomeClose" class="welcome-close" aria-label="닫기">enter</button>
+            <div id="welcomeCaption" class="welcome-caption">TODAY...</div>
+            <button id="welcomeClose" class="welcome-close" aria-label="닫기">MORE?</button>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC1AtCeDkgLoE8PFzBjjdfFKHq0vWB1cNI",
-            authDomain: "scrollit-9556f.firebaseapp.com",
-            projectId: "scrollit-9556f",
-            storageBucket: "scrollit-9556f.firebasestorage.app",
-            messagingSenderId: "750918986653",
-            appId: "1:750918986653:web:46871d2f5a0c942a441d74"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const defaultImages = [
-            { url: "https://picsum.photos/id/1015/800/600", text: "이것은 첫 번째 이미지입니다.\n여기에 원하는 설명을 작성하세요." },
-            { url: "https://picsum.photos/id/1025/800/600", text: "두 번째 이미지의 설명\n\n여러 줄로 작성할 수 있습니다." },
-            { url: "https://picsum.photos/id/1035/800/600", text: "세 번째 이미지" },
-            { url: "https://picsum.photos/id/1040/800/600", text: "" },
-            { url: "https://picsum.photos/id/1060/800/600", text: "" },
-            { url: "https://picsum.photos/id/1070/800/600", text: "" },
-            { url: "https://picsum.photos/id/1084/800/600", text: "" },
-            { url: "https://picsum.photos/id/1080/800/600", text: "" },
-            { url: "https://picsum.photos/id/1020/800/600", text: "" },
-            { url: "https://picsum.photos/id/1003/800/600", text: "" },
-            { url: "https://picsum.photos/id/1011/800/600", text: "" },
-            { url: "https://picsum.photos/id/1016/800/600", text: "" },
-            { url: "https://picsum.photos/id/1018/800/600", text: "" },
-            { url: "https://picsum.photos/id/1022/800/600", text: "" },
-            { url: "https://picsum.photos/id/1027/800/600", text: "" },
-            { url: "images/one(2).jpg", text: "" },
-        ];
-
-        const gallery = document.getElementById("gallery");
-        const fileInput = document.getElementById("fileInput");
-        const lightbox = document.getElementById("lightbox");
-        const lightboxImg = document.getElementById("lightboxImg");
-        const lightboxText = document.getElementById("lightboxText");
-        const lightboxClose = document.getElementById("lightboxClose");
-        const openSideBtn = document.getElementById("openSideBtn");
-        const closeSideBtn = document.getElementById("closeSideBtn");
-        const sidePanel = document.getElementById("sidePanel");
-        const welcomeModal = document.getElementById("welcomeModal");
-        const welcomeImg = document.getElementById("welcomeImg");
-        const welcomeText = document.getElementById("welcomeText");
-        const welcomeClose = document.getElementById("welcomeClose");
-        const clickTopBtn = document.getElementById("clickTopBtn");
-        const topButton = document.querySelector(".top_button");
-        const openUploadBtn = document.getElementById("openUploadBtn");
-        const closeUploadBtn = document.getElementById("closeUploadBtn");
-        const uploadPanel = document.getElementById("uploadPanel");
-        const captionInput = document.getElementById("captionInput");
-        const submitUploadBtn = document.getElementById("submitUploadBtn");
-        const fileList = document.getElementById("fileList");
-        const uploadArea = document.querySelector(".upload-area");
-        const uploadStatus = document.getElementById("uploadStatus");
-
-        let allImages = [];
-        let lastFocusedEl = null;
-        let selectedFiles = [];
-
-        function shuffle(array) {
-            const newArray = [...array];
-            for (let i = newArray.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-            }
-            return newArray;
-        }
-
-        async function loadImagesFromFirebase() {
-            try {
-                const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
-                const querySnapshot = await getDocs(q);
-                const firebaseImages = [];
-                
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    firebaseImages.push({
-                        url: data.imageData,
-                        text: data.caption || ""
-                    });
-                });
-
-                return firebaseImages;
-            } catch (error) {
-                console.error("Firebase 이미지 로드 실패:", error);
-                return [];
-            }
-        }
-
-        function renderGallery(images) {
-            gallery.innerHTML = "";
-            const fragment = document.createDocumentFragment();
-
-            images.forEach((item) => {
-                const a = document.createElement("a");
-                a.className = "photo";
-                a.href = item.url;
-                a.setAttribute("aria-label", "이미지 보기");
-
-                const img = document.createElement("img");
-                img.src = item.url;
-                img.alt = "갤러리 이미지";
-
-                img.addEventListener("error", () => {
-                    img.style.opacity = 0.6;
-                    img.alt = "이미지 로드 실패";
-                });
-
-                a.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    openLightbox(item.url, item.text);
-                });
-
-                a.appendChild(img);
-                fragment.appendChild(a);
-            });
-
-            gallery.appendChild(fragment);
-        }
-
-        fileInput.addEventListener("change", (e) => {
-            const files = Array.from(e.target.files).filter((f) =>
-                f.type.startsWith("image/")
-            );
-
-            if (files.length === 0) return;
-            selectedFiles = files;
-            displayFileList(files);
-            e.target.value = "";
-        });
-
-        function displayFileList(files) {
-            fileList.innerHTML = "";
-
-            files.forEach((file, index) => {
-                const fileItem = document.createElement("div");
-                fileItem.className = "file-item";
-
-                const fileName = document.createElement("span");
-                fileName.className = "file-item-name";
-                fileName.textContent = file.name;
-
-                const removeBtn = document.createElement("button");
-                removeBtn.className = "file-item-remove";
-                removeBtn.textContent = "✕";
-                removeBtn.onclick = () => removeFile(index);
-
-                fileItem.appendChild(fileName);
-                fileItem.appendChild(removeBtn);
-                fileList.appendChild(fileItem);
-            });
-        }
-
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            displayFileList(selectedFiles);
-        }
-
-        uploadArea.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            uploadArea.classList.add("drag-over");
-        });
-
-        uploadArea.addEventListener("dragleave", () => {
-            uploadArea.classList.remove("drag-over");
-        });
-
-        uploadArea.addEventListener("drop", (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove("drag-over");
-
-            const files = Array.from(e.dataTransfer.files).filter((f) =>
-                f.type.startsWith("image/")
-            );
-
-            if (files.length > 0) {
-                selectedFiles = files;
-                displayFileList(files);
-            }
-        });
-
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function showStatus(message, isError = false) {
-            uploadStatus.textContent = message;
-            uploadStatus.style.background = isError ? 
-                'rgba(255, 0, 0, 0.3)' : 
-                'rgba(0, 255, 0, 0.3)';
-            uploadStatus.classList.add('show');
-            
-            setTimeout(() => {
-                uploadStatus.classList.remove('show');
-            }, 3000);
-        }
-
-        submitUploadBtn.addEventListener("click", async () => {
-            if (selectedFiles.length === 0) {
-                alert("이미지를 선택해주세요!");
-                return;
-            }
-
-            const caption = captionInput.value.trim();
-
-            submitUploadBtn.disabled = true;
-            submitUploadBtn.textContent = "업로드 중...";
-            showStatus("업로드 중입니다...");
-
-            try {
-                for (const file of selectedFiles) {
-                    if (file.size > 1024 * 1024) {
-                        showStatus(`${file.name}은(는) 너무 큽니다 (1MB 이하만 가능)`, true);
-                        continue;
-                    }
-
-                    const base64Data = await fileToBase64(file);
-                    const timestamp = Date.now();
-
-                    await addDoc(collection(db, "gallery"), {
-                        imageData: base64Data,
-                        caption: caption,
-                        timestamp: timestamp
-                    });
-
-                    allImages.unshift({
-                        url: base64Data,
-                        text: caption
-                    });
-                }
-
-                renderGallery(shuffle(allImages));
-                
-                showStatus("업로드 완료! 🎉");
-                closeUploadPanel();
-                resetUploadForm();
-
-            } catch (error) {
-                console.error("업로드 실패:", error);
-                showStatus("업로드 실패. 다시 시도해주세요.", true);
-            } finally {
-                submitUploadBtn.disabled = false;
-                submitUploadBtn.textContent = "OK!";
-            }
-        });
-
-        function resetUploadForm() {
-            selectedFiles = [];
-            fileList.innerHTML = "";
-            captionInput.value = "";
-            fileInput.value = "";
-        }
-
-        function openLightbox(url, text) {
-            lastFocusedEl = document.activeElement;
-            lightboxImg.src = url;
-            lightboxText.textContent = text || "";
-
-            lightbox.setAttribute("aria-hidden", "false");
-            lightbox.classList.add("open");
-            document.body.style.overflow = "hidden";
-
-            lightboxClose.focus();
-
-            document.addEventListener("focus", enforceFocus, true);
-            lightbox.addEventListener("keydown", trapTabKey);
-        }
-
-        function closeLightbox() {
-            lightbox.classList.remove("open");
-            lightbox.setAttribute("aria-hidden", "true");
-            lightboxImg.src = "";
-            lightboxText.textContent = "";
-            document.body.style.overflow = "";
-
-            document.removeEventListener("focus", enforceFocus, true);
-            lightbox.removeEventListener("keydown", trapTabKey);
-
-            if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
-                lastFocusedEl.focus();
-            }
-        }
-
-        function enforceFocus(e) {
-            if (!lightbox.classList.contains("open")) return;
-            if (!lightbox.contains(e.target)) {
-                e.stopPropagation();
-                lightboxClose.focus();
-            }
-        }
-
-        function trapTabKey(e) {
-            if (e.key !== "Tab") return;
-
-            const focusable = Array.from(
-                lightbox.querySelectorAll(
-                    'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'
-                )
-            ).filter((el) => !el.disabled && el.offsetParent !== null);
-
-            if (focusable.length === 0) {
-                e.preventDefault();
-                return;
-            }
-
-            const first = focusable[0];
-            const last = focusable[focusable.length - 1];
-
-            if (e.shiftKey) {
-                if (document.activeElement === first) {
-                    e.preventDefault();
-                    last.focus();
-                }
-            } else {
-                if (document.activeElement === last) {
-                    e.preventDefault();
-                    first.focus();
-                }
-            }
-        }
-
-        lightbox.addEventListener("click", (e) => {
-            if (e.target === lightbox) closeLightbox();
-        });
-        lightboxClose.addEventListener("click", closeLightbox);
-
-        function openSidePanel() {
-            sidePanel.classList.add("open");
-            sidePanel.setAttribute("aria-hidden", "false");
-            openSideBtn.parentElement.classList.add("hidden");
-            closeSideBtn.focus();
-        }
-
-        function closeSidePanel() {
-            sidePanel.classList.remove("open");
-            sidePanel.setAttribute("aria-hidden", "true");
-            openSideBtn.parentElement.classList.remove("hidden");
-            openSideBtn.focus();
-        }
-
-        openSideBtn.addEventListener("click", openSidePanel);
-        closeSideBtn.addEventListener("click", closeSidePanel);
-
-        function openUploadPanel() {
-            uploadPanel.classList.add("open");
-            uploadPanel.setAttribute("aria-hidden", "false");
-            openUploadBtn.parentElement.classList.add("hidden");
-            closeUploadBtn.focus();
-        }
-
-        function closeUploadPanel() {
-            uploadPanel.classList.remove("open");
-            uploadPanel.setAttribute("aria-hidden", "true");
-            openUploadBtn.parentElement.classList.remove("hidden");
-            openUploadBtn.focus();
-        }
-
-        openUploadBtn.addEventListener("click", openUploadPanel);
-        closeUploadBtn.addEventListener("click", closeUploadPanel);
-
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") {
-                if (lightbox.classList.contains("open")) {
-                    closeLightbox();
-                } else if (sidePanel.classList.contains("open")) {
-                    closeSidePanel();
-                } else if (uploadPanel.classList.contains("open")) {
-                    closeUploadPanel();
-                } else if (!welcomeModal.classList.contains("hidden")) {
-                    closeWelcomeModal();
-                }
-            }
-        });
-
-        function getTodayImageIndex() {
-            const today = new Date();
-            const dateNumber = today.getFullYear() * 10000 +
-                (today.getMonth() + 1) * 100 +
-                today.getDate();
-
-            return dateNumber % defaultImages.length;
-        }
-
-        function showWelcomeModal() {
-            const todayIndex = getTodayImageIndex();
-            const todayImage = defaultImages[todayIndex];
-
-            welcomeImg.src = todayImage.url;
-            welcomeText.textContent = todayImage.text || "";
-
-            welcomeModal.setAttribute("aria-hidden", "false");
-            welcomeModal.classList.remove("hidden");
-            document.body.style.overflow = "hidden";
-
-            welcomeClose.focus();
-        }
-
-        function closeWelcomeModal() {
-            welcomeModal.classList.add("hidden");
-            welcomeModal.setAttribute("aria-hidden", "true");
-            document.body.style.overflow = "";
-        }
-
-        welcomeClose.addEventListener("click", closeWelcomeModal);
-
-        welcomeModal.addEventListener("click", (e) => {
-            if (e.target === welcomeModal) {
-                closeWelcomeModal();
-            }
-        });
-
-        clickTopBtn.addEventListener("click", () => {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 300) {
-                topButton.classList.remove("hidden");
-            } else {
-                topButton.classList.add("hidden");
-            }
-        }, { passive: true });
-
-        async function init() {
-            const firebaseImages = await loadImagesFromFirebase();
-            allImages = [...firebaseImages, ...defaultImages];
-            
-            const shuffledImages = shuffle(allImages);
-            renderGallery(shuffledImages);
-            
-            showWelcomeModal();
-        }
-
-        window.addEventListener("load", init);
-    </script>
+    <script type="module" src="script.js"></script>
 </body>
+
 </html>
