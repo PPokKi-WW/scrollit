@@ -29,12 +29,7 @@
 { url: "images/asd (361).jpg", text: "" },
 { url: "images/asd (362).jpg", text: "" },
 { url: "images/asd (363).JPEG", text: "" },
-            { url: "https://picsum.photos/id/1011/800/600", text: "" },
-            { url: "https://picsum.photos/id/1016/800/600", text: "" },
-            { url: "https://picsum.photos/id/1018/800/600", text: "" },
-            { url: "https://picsum.photos/id/1022/800/600", text: "" },
-            { url: "https://picsum.photos/id/1027/800/600", text: "" },
-            { url: "https://picsum.photos/id/1031/800/600", text: "" },
+ 
         ];
 
         const gallery = document.getElementById("gallery");
@@ -452,3 +447,4 @@
 
 
         window.addEventListener("load", init);
+
